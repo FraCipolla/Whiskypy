@@ -1,1 +1,1 @@
-from .whiskypy import Openwhisk
+from .cli import Openwhisk
