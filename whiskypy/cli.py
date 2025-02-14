@@ -88,6 +88,8 @@ class _Action:
             
 class Openwhisk:
 
+    __version__ = "0.2"
+
     def __init__(self, apihost = None):
         if not apihost:
             raise ValueError("apihost missing")
