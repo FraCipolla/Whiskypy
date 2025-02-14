@@ -1,6 +1,6 @@
-from setuptools import setup
+import setuptools
 
-setup(
+setuptools.setup(
     # Needed to silence warnings (and to be a worthwhile package)
     name='whiskypy',
     url='https://github.com/FraCipolla/whiskypy',
@@ -18,3 +18,7 @@ setup(
     # We will also need a readme eventually (there will be a warning)
     long_description=open('README.md').read()
 )
+
+setuptools.find_packages(include=[
+    'openwhisk.Openwhisk'
+])
