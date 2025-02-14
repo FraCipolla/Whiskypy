@@ -1,2 +1,1 @@
-from whiskypy import openwhisk
-__all__ = ['openwhisk']
+from whiskypy import Openwhisk

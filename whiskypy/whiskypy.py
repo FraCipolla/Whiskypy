@@ -86,7 +86,7 @@ class _Action:
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
             
-class openwhisk:
+class Openwhisk:
 
     def __init__(self, apihost = None):
         if not apihost:
