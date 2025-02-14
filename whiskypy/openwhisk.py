@@ -99,3 +99,8 @@ class Openwhisk:
         self.action = _Action(apihost=apihost, apikey=self.apikey)
         # self.activation_id = os.environ['__OW_ACTIVATION_ID']
         # self.deadline = os.environ['__OW_DEADLINE']
+
+    def test(self):
+        print(self.apihost)
+        print(self.apikey)
+        print(self.namespace)
