@@ -9,7 +9,7 @@ setup(
     # Needed to actually package something
     packages=['whiskypy'],
     # Needed for dependencies
-    install_requires=['requests', 'os'],
+    install_requires=['requests'],
     # *strongly* suggested for sharing
     version='0.1',
     # The license can be anything you like
