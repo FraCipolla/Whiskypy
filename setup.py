@@ -16,5 +16,5 @@ setup(
     license='MIT',
     description='A Python openwhisk wrapper',
     # We will also need a readme eventually (there will be a warning)
-    long_description=open('README.md').read(),
+    long_description=open('README.md').read()
 )
