@@ -1,1 +1,1 @@
-__all__ = ['openwhisk']
+from openwhisk import Openwhisk
