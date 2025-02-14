@@ -1,1 +1,1 @@
-from openwhisk import Openwhisk
+from whiskypy.cli import Openwhisk

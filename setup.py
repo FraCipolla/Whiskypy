@@ -18,7 +18,3 @@ setuptools.setup(
     # We will also need a readme eventually (there will be a warning)
     long_description=open('README.md').read()
 )
-
-setuptools.find_packages(include=[
-    'openwhisk.Openwhisk'
-])
