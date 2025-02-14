@@ -1,3 +1,1 @@
-from .cli import Openwhisk
-
-__all__ = ['Openwhisk']
+__all__ = ['openwhisk']
