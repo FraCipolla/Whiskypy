@@ -3,6 +3,8 @@ import jwt
 class ow_auth:
     def __init__(self, func):
         self._fn = func
+        self.token = None
+        self.decoded = None
 
     def __call__(self, args, **kwargs):
         print(args)
