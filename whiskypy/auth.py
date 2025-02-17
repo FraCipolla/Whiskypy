@@ -6,6 +6,8 @@ DECODED_JWT = None
 def auth_decorator():
     def decorator(function):
         def wrapper(args, **kwargs):
+            global JWT
+            global DECODED_JWT
             token = args['__ow_headers'].get('authorization', False)
             if not token:
                 return {'statusCode': 401, "body": {"error": "missing Authorization"}}
