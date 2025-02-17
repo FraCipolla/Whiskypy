@@ -1,23 +1,38 @@
 import jwt
 
-JWT = None
-DECODED_JWT = None
+class ow_auth:
+    def __init__(self, func):
+        self._fn = func
 
-def auth_decorator():
-    def decorator(function):
+    def __call__(self, fn):
         def wrapper(args, **kwargs):
-            global JWT
-            global DECODED_JWT
             token = args['__ow_headers'].get('authorization', False)
             if not token:
                 return {'statusCode': 401, "body": {"error": "missing Authorization"}}
             token_spl = token.split(' ')
             if token_spl[0] != 'Bearer':
                 return {"statusCode": 401, "body": {"error": "Authorization failed"}}
-            JWT = token_spl[1]
+            secret = args['JWT_SECRET']
+            self.token = token_spl[1]
+            try:
+                self.decoded = jwt.decode(self.token, key=secret, algorithms='HS256')
+            except Exception as e:
+                return {"statusCode": 401, "body": {"error": e}}
+            return fn(args, **kwargs)
+        return wrapper
+
+def auth_decorator():
+    def decorator(function):
+        def wrapper(args, **kwargs):
+            token = args['__ow_headers'].get('authorization', False)
+            if not token:
+                return {'statusCode': 401, "body": {"error": "missing Authorization"}}
+            token_spl = token.split(' ')
+            if token_spl[0] != 'Bearer':
+                return {"statusCode": 401, "body": {"error": "Authorization failed"}}
             secret = args['JWT_SECRET']
             try:
-                DECODED_JWT = jwt.decode(JWT, key=secret, algorithms='HS256')
+                jwt.decode(token_spl[1], key=secret, algorithms='HS256')
             except Exception as e:
                 return {"statusCode": 401, "body": {"error": e}}
             return function(args, **kwargs)
