@@ -1,8 +1,6 @@
 import jwt
 
-TOKEN = None, JWT = None
-
-def auth():
+def auth(coded, decoded):
     def decorator(function):
         def wrapper(args, **kwargs):
             token = args['__ow_headers'].get('authorization', False)
@@ -11,10 +9,10 @@ def auth():
             token_spl = token.split(' ')
             if token_spl[0] != 'Bearer':
                 return {"statusCode": 401, "body": {"error": "Authorization failed"}}
-            TOKEN = token_spl[1]
+            coded = token_spl[1]
             secret = args.get('JWT_SECRET')
             try:
-                JWT = jwt.decode(token, key=secret, algorithms='HS256')
+                decoded = jwt.decode(token, key=secret, algorithms='HS256')
             except:
                 return {"statusCode": 401, "body": {"error": "Invalid token"}}
             return function(args, **kwargs)
