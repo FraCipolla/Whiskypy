@@ -9,7 +9,7 @@ setuptools.setup(
     # Needed to actually package something
     packages=['whiskypy'],
     # Needed for dependencies
-    install_requires=['requests', 'jwt', 'typing'],
+    install_requires=['requests', 'PyJWT', 'typing'],
     # *strongly* suggested for sharing
     version='0.2',
     # The license can be anything you like
