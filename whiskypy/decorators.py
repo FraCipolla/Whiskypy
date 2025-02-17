@@ -33,7 +33,7 @@ def controller(mapping = {'get': {}, 'post': {}, 'delete': {}, 'put': {}, 'defau
         def wrapper(args, **kwargs):
             method = args['__ow_method']
             path = args['__ow_path']
-            fn = mapping[method][path]
+            fn = mapping[method][path] or None
             if fn:
                 function(args, **kwargs)
                 return fn(args)
