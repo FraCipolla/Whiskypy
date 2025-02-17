@@ -4,7 +4,7 @@ class ow_auth:
     def __init__(self, func):
         self._fn = func
 
-    def __call__(self, *args, **kwargs):
+    def __call__(self, args, **kwargs):
         print(args)
         token = args['__ow_headers'].get('authorization', False)
         if not token:
@@ -18,7 +18,7 @@ class ow_auth:
             self.decoded = jwt.decode(self.token, key=secret, algorithms='HS256')
         except Exception as e:
             return {"statusCode": 401, "body": {"error": e}}
-        return self._fn(*args, **kwargs)
+        return self._fn(args, **kwargs)
 
 def auth_decorator():
     def decorator(function):
