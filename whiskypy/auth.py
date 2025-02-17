@@ -10,11 +10,12 @@ def auth(coded, decoded):
             if token_spl[0] != 'Bearer':
                 return {"statusCode": 401, "body": {"error": "Authorization failed"}}
             coded = token_spl[1]
-            secret = args.get('JWT_SECRET')
+            secret = args['JWT_SECRET']
+            print(secret)
             try:
-                decoded = jwt.decode(token, key=secret, algorithms='HS256')
-            except:
-                return {"statusCode": 401, "body": {"error": "Invalid token"}}
+                decoded = jwt.decode(coded, key=secret, algorithms='HS256')
+            except Exception as e:
+                return {"statusCode": 401, "body": {"error": e}}
             return function(args, **kwargs)
         return wrapper
     return decorator
