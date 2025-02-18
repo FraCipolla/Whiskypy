@@ -8,20 +8,18 @@ class _Action:
         self.apikey = apikey.split(':')
         self.namespace = namespace
 
-    def get(self, action: str, headers = {}, body = {}, web = True, blocking = False):
+    def get(self, action: str, headers = {}, web = True, blocking = False):
         try:
             if not web:
                 r = requests.get(
                     f"{self.apihost}/api/v1/namespace/{self.namespace}/actions/{action}?blocking={blocking}",
                     auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
                     headers=headers,
-                    body=body
                     )
             else:
                 r = requests.get(
                     f"{self.apihost}/api/v1/web/{self.namespace}/{action}?blocking={blocking}",
                     headers=headers,
-                    body=body
                     )
             return r
         except requests.exceptions.RequestException as e:
@@ -32,31 +30,31 @@ class _Action:
             if not web:
                 r = requests.post(
                     f"{self.apihost}/api/v1/namespace/{self.namespace}/actions/{action}?blocking={blocking}",
-                    auth=HTTPBasicAuth(self.apikey[0], self.apikey[1])
+                    auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                    headers=headers,
+                    json=body
                     )
             else:
                 r = requests.get(
                     f"{self.apihost}/api/v1/web/{self.namespace}/{action}?blocking={blocking}",
                     headers=headers,
-                    body=body
+                    json=body
                     )
             return r
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
-    def delete(self, action: str, headers = {}, body = {}, web = True, blocking = False):
+    def delete(self, action: str, headers = {}, web = True, blocking = False):
         try:
             if not web:
                 r = requests.delete(
                     f"{self.apihost}/api/v1/namespace/{self.namespace}/actions/{action}?blocking={blocking}",
                     auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
                     headers=headers,
-                    body=body
                     )
             else:
                 r = requests.delete(
                     f"{self.apihost}/api/v1/web/{self.namespace}/{action}?blocking={blocking}",
                     headers=headers,
-                    body=body
                     )
             return r
         except requests.exceptions.RequestException as e:
@@ -69,13 +67,13 @@ class _Action:
                     f"{self.apihost}/api/v1/namespace/{self.namespace}/actions/{action}?blocking={blocking}",
                     auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
                     headers=headers,
-                    body=body
+                    json=body
                     )
             else:
                 r = requests.put(
                     f"{self.apihost}/api/v1/web/{self.namespace}/{action}?blocking={blocking}",
                     headers=headers,
-                    body=body
+                    json=body
                     )
             return r
         except requests.exceptions.RequestException as e:
