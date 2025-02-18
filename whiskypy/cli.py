@@ -2,133 +2,191 @@ import os
 import requests
 from requests.auth import HTTPBasicAuth
 
+class _Invoke:
+    def __init__(self, apihost, apikey, namespace):
+        self.apihost = apihost
+        self.apikey = apikey.split(':')
+        self.namespace = namespace
+
+    def get(self, action=None, headers = {}, params={}, namespace=None):
+        try:
+            if not action:
+                raise ValueError('action name missing')
+            return requests.get(
+                f"{self.apihost}/api/v1/web/{self.namespace if not namespace else namespace}/{action}",
+                headers=headers,
+                params=params
+                )
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+        
+    def post(self, action=None, headers = {"Content-Type": "application/json"}, params={}, body = {}, namespace=None):
+        try:
+            if not action:
+                raise ValueError('action name missing')
+            return requests.get(
+                f"{self.apihost}/api/v1/web/{self.namespace if not namespace else namespace}/{action}",
+                headers=headers,
+                json=body,
+                params=params
+                )
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+        
+    def delete(self, action=None, headers = {}, params={}, namespace=None):
+        try:
+            if not action:
+                raise ValueError('action name missing')
+            return requests.delete(
+                f"{self.apihost}/api/v1/web/{self.namespace if not namespace else namespace}/{action}",
+                headers=headers,
+                params=params
+                )
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+        
+    def put(self, action=None, headers = {"Content-Type": "application/json"}, params={}, body = {}, namespace=None):
+        try:
+            return requests.put(
+                f"{self.apihost}/api/v1/web/{self.namespace if not namespace else namespace}/{action}",
+                headers=headers,
+                json=body,
+                params=params
+                )
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+
 class _Action:
     def __init__(self, apihost, apikey, namespace):
         self.apihost = apihost
         self.apikey = apikey.split(':')
         self.namespace = namespace
 
-    def get(self, action: str, headers = {}, web = True, blocking = False):
+    def list(self, limit = 30, skip = 0):
         try:
-            if not web:
-                r = requests.get(
-                    f"{self.apihost}/api/v1/namespaces/{self.namespace}/actions/{action}?blocking={blocking}",
+            return requests.get(
+                    f"{self.apihost}/api/v1/namespaces/{self.namespace}/actions",
                     auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
-                    headers=headers,
+                    params={"limit": limit, "skip": skip}
                     )
-            else:
-                r = requests.get(
-                    f"{self.apihost}/api/v1/web/{self.namespace}/{action}?blocking={blocking}",
-                    headers=headers,
-                    )
-            return r
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
-        
-    def post(self, action: str, headers = {"Content-Type": "application/json"}, body = {}, web = True, blocking = False):
+    def get(self, action=None):
         try:
-            if not web:
-                return requests.post(
-                    f"{self.apihost}/api/v1/namespaces/{self.namespace}/actions/{action}?blocking={blocking}",
-                    auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
-                    headers=headers,
-                    json=body
-                    )
-            else:
+            if action:
                 return requests.get(
-                    f"{self.apihost}/api/v1/web/{self.namespace}/{action}?blocking={blocking}",
-                    headers=headers,
-                    json=body
-                    )
-        except requests.exceptions.RequestException as e:
-            raise SystemExit(e)
-    def delete(self, action: str, headers = {}, web = True, blocking = False):
-        try:
-            if not web:
-                r = requests.delete(
-                    f"{self.apihost}/api/v1/namespaces/{self.namespace}/actions/{action}?blocking={blocking}",
+                    f"{self.apihost}/api/v1/namespaces/{self.namespace}/actions/{action}",
                     auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
-                    headers=headers,
                     )
-            else:
-                r = requests.delete(
-                    f"{self.apihost}/api/v1/web/{self.namespace}/{action}?blocking={blocking}",
-                    headers=headers,
-                    )
-            return r
+            raise ValueError("action name missing")
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
         
-    def put(self, action: str, headers = {"Content-Type": "application/json"}, body = {}, web = True, blocking = False):
+    def create(self, action=None, body={}):
         try:
-            if not web:
-                r = requests.put(
-                    f"{self.apihost}/api/v1/namespaces/{self.namespace}/actions/{action}?blocking={blocking}",
-                    auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
-                    headers=headers,
-                    json=body
-                    )
-            else:
-                r = requests.put(
-                    f"{self.apihost}/api/v1/web/{self.namespace}/{action}?blocking={blocking}",
-                    headers=headers,
-                    json=body
-                    )
-            return r
+            if not action:
+                raise ValueError("action name missing")
+            return requests.put(
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/actions/{action}",
+                auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                json=body,
+                params={"overwrite": False}
+                )
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
-
+    def update(self, action=None, body={}):
+        try:
+            if not action:
+                raise ValueError("action name missing")
+            return requests.put(
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/actions/{action}",
+                auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                json=body,
+                params={"overwrite": True}
+                )
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+        
+    def delete(self, action=None):
+        try:
+            if not action:
+                raise ValueError("action name missing")
+            return requests.delete(
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/actions/{action}",
+                auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                )
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+        
+    def invoke(self, action=None, blocking=False, result=False, timeout=60000, payload={}):
+        try:
+            if not action:
+                raise ValueError("action name missing")
+            return requests.post(
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/actions/{action}",
+                auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                params={"blocking": blocking, 'result': result, 'timeout': timeout},
+                json=payload
+                )
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
 
 class _Package:
     def __init__(self, apihost, apikey, namespace):
         self.apihost = apihost
         self.apikey = apikey.split(':')
         self.namespace = namespace
-
-    def find(self, headers = {}, body = {}, blocking = False):
+    
+    def list(self, public=False, limit=30, skip=0):
         try:
-            r = requests.get(
+            return requests.get(
                 f"{self.apihost}/api/v1/namespaces/{self.namespace}/packages",
                 auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
-                headers=headers,
-                body=body
+                params={"public": public, "limit": limit, "skip": skip}
                 )
-            return r
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
         
-    def find_one(self, package, headers = {}, body = {}, blocking = False):
+    def get(self, package=None, public=False, limit=30, skip=0):
         try:
-            r = requests.get(
-                f"{self.apihost}/api/v1/namespaces/{self.namespace}/packages/{package}",
-                auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
-                headers=headers,
-                body=body
-                )
-            return r
+            if package:
+                return requests.get(
+                    f"{self.apihost}/api/v1/namespaces/{self.namespace}/packages",
+                    auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                    params={"public": public, "limit": limit, "skip": skip}
+                    )
+            raise ValueError('package name missing')
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
-    def delete(self, package, headers = {}, body = {}, blocking = False):
+        
+    def delete(self, package, force=False):
         try:
             r = requests.delete(
                 f"{self.apihost}/api/v1/namespaces/{self.namespace}/packages/{package}?force=true",
                 auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
-                headers=headers,
-                body=body
+                params={"force": force}
                 )
             return r
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
-        
-    def add(self, package, headers = {"Content-Type": "application/json"}, body = {}, blocking = False):
+    def create(self, package, overwrite=False, body={}):
         try:
-            r = requests.put(
+            return requests.put(
                 f"{self.apihost}/api/v1/namespaces/{self.namespace}/packages/{package}",
                 auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
-                headers=headers,
-                body=body
+                json=body,
+                params={"overwrite": overwrite}
                 )
-            return r
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+    def update(self, package, overwrite=True, body={}):
+        try:
+            return requests.put(
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/packages/{package}",
+                auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                json=body,
+                params={"overwrite": overwrite}
+                )
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
 
@@ -138,42 +196,45 @@ class _Activation:
         self.apikey = apikey.split(':')
         self.namespace = namespace
 
-    def find(self, limit = 30, skip = 0, since = 0, upto = 0):
+    def list(self, name = None, limit = 30, skip = 0, since = 0, upto = 0, docs=False):
         try:
-            r = requests.get(
+            if name:
+                return requests.get(
+                    f"{self.apihost}/api/v1/namespaces/{self.namespace}/activations",
+                    auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                    params={'name': name, "limit": limit, "skip": skip, "since": since, "upto": upto, 'docs': docs}
+                    )    
+            return requests.get(
                 f"{self.apihost}/api/v1/namespaces/{self.namespace}/activations",
                 auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
-                params={"limit": limit, "skip": skip, "since": since, "upto": upto}
+                params={"limit": limit, "skip": skip, "since": since, "upto": upto, 'docs': docs}
                 )
-            return r
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
-        
-    def find_one(self, activation_id):
+    def get(self, id=None):
         try:
-            r = requests.get(
-                f"{self.apihost}/api/v1/namespaces/{self.namespace}/activations/{activation_id}",
-                auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
-                )
-            return r
+            if id:
+                return requests.get(
+                    f"{self.apihost}/api/v1/namespaces/{self.namespace}/activations/{id}",
+                    auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                    )
+            raise ValueError("activation id is missing")
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
-    def logs(self, activation_id):
+    def logs(self, id):
         try:
-            r = requests.get(
-                f"{self.apihost}/api/v1/namespaces/{self.namespace}/activations/{activation_id}/logs",
+            return requests.get(
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/activations/{id}/logs",
                 auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
                 )
-            return r
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
-    def result(self, activation_id):
+    def result(self, id):
         try:
-            r = requests.get(
-                f"{self.apihost}/api/v1/namespaces/{self.namespace}/activations/{activation_id}/result",
+            return requests.get(
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/activations/{id}/result",
                 auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
                 )
-            return r
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
         
@@ -189,13 +250,10 @@ class Openwhisk:
         self.namespace = os.environ['__OW_NAMESPACE']
         self.action_name = os.environ['__OW_ACTION_NAME']
         self.action_version = os.environ['__OW_ACTION_VERSION']
+        self.activation_id = os.environ['__OW_ACTIVATION_ID']
+        self.deadline = os.environ['__OW_DEADLINE']
+        self.invoke = _Invoke(apihost=apihost, apikey=self.apikey, namespace=self.namespace)
         self.actions = _Action(apihost=apihost, apikey=self.apikey, namespace=self.namespace)
         self.packages = _Package(apihost=apihost, apikey=self.apikey, namespace=self.namespace)
         self.activations = _Activation(apihost=apihost, apikey=self.apikey, namespace=self.namespace)
-        # self.activation_id = os.environ['__OW_ACTIVATION_ID']
-        # self.deadline = os.environ['__OW_DEADLINE']
 
-    def test(self):
-        print(self.apihost)
-        print(self.apikey)
-        print(self.namespace)

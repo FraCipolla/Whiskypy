@@ -1,14 +1,5 @@
 from typing import overload
 
-def param(argument):
-    def decorator(function):
-        def wrapper(args, **kwargs):
-            if argument not in args:
-                return {"statusCode": 500, "body": {"error": f"Internal server error: {argument} missing"}}
-            return function(args, **kwargs)
-        return wrapper
-    return decorator
-
 @overload
 def require(argument: str): ...
 @overload
@@ -41,15 +32,5 @@ def controller(mapping = {'get': {}, 'post': {}, 'delete': {}, 'put': {}, 'defau
                 if 'default' in mapping:
                     return mapping['default']
             return {'statusCode': 404}
-        return wrapper
-    return decorator
-
-def parse(argument, store):
-    def decorator(function):
-        def wrapper(args, **kwargs):
-            if argument not in args:
-                return {"statusCode": 404, "body": {"error": argument + "not found"}}
-            store = argument
-            return function(args, **kwargs)
         return wrapper
     return decorator

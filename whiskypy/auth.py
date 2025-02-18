@@ -7,7 +7,6 @@ class ow_auth:
         self.decoded = "decoded"
 
     def __call__(self, args, **kwargs):
-        print(args)
         token = args['__ow_headers'].get('authorization', False)
         if not token:
             return {'statusCode': 401, "body": {"error": "missing Authorization"}}
