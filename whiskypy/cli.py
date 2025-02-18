@@ -32,19 +32,20 @@ class _Action:
         try:
             if not web:
                 print(f"{self.apihost}/api/v1/namespace/{self.namespace}/actions/{action}?blocking={blocking}")
-                r = requests.post(
+                print(body)
+                print(headers)
+                return requests.post(
                     f"{self.apihost}/api/v1/namespace/{self.namespace}/actions/{action}?blocking={blocking}",
                     auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
                     headers=headers,
                     json=body
                     )
             else:
-                r = requests.get(
+                return requests.get(
                     f"{self.apihost}/api/v1/web/{self.namespace}/{action}?blocking={blocking}",
                     headers=headers,
                     json=body
                     )
-            return r
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
     def delete(self, action: str, headers = {}, web = True, blocking = False):
