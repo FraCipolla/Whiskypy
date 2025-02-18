@@ -7,15 +7,12 @@ class _Action:
         self.apihost = apihost
         self.apikey = apikey.split(':')
         self.namespace = namespace
-        print(self.apihost)
-        print(self.apikey)
-        print(self.namespace)
 
     def get(self, action: str, headers = {}, web = True, blocking = False):
         try:
             if not web:
                 r = requests.get(
-                    f"{self.apihost}/api/v1/namespace/{self.namespace}/actions/{action}?blocking={blocking}",
+                    f"{self.apihost}/api/v1/namespaces/{self.namespace}/actions/{action}?blocking={blocking}",
                     auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
                     headers=headers,
                     )
@@ -31,11 +28,8 @@ class _Action:
     def post(self, action: str, headers = {"Content-Type": "application/json"}, body = {}, web = True, blocking = False):
         try:
             if not web:
-                print(f"{self.apihost}/api/v1/namespace/{self.namespace}/actions/{action}?blocking={blocking}")
-                print(body)
-                print(headers)
                 return requests.post(
-                    f"{self.apihost}/api/v1/namespace/{self.namespace}/actions/{action}?blocking={blocking}",
+                    f"{self.apihost}/api/v1/namespaces/{self.namespace}/actions/{action}?blocking={blocking}",
                     auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
                     headers=headers,
                     json=body
@@ -52,7 +46,7 @@ class _Action:
         try:
             if not web:
                 r = requests.delete(
-                    f"{self.apihost}/api/v1/namespace/{self.namespace}/actions/{action}?blocking={blocking}",
+                    f"{self.apihost}/api/v1/namespaces/{self.namespace}/actions/{action}?blocking={blocking}",
                     auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
                     headers=headers,
                     )
@@ -69,7 +63,7 @@ class _Action:
         try:
             if not web:
                 r = requests.put(
-                    f"{self.apihost}/api/v1/namespace/{self.namespace}/actions/{action}?blocking={blocking}",
+                    f"{self.apihost}/api/v1/namespaces/{self.namespace}/actions/{action}?blocking={blocking}",
                     auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
                     headers=headers,
                     json=body
@@ -91,10 +85,10 @@ class _Package:
         self.apikey = apikey.split(':')
         self.namespace = namespace
 
-    def find(self, headers = {}, body = {}, web = True, blocking = False):
+    def find(self, headers = {}, body = {}, blocking = False):
         try:
             r = requests.get(
-                f"{self.apihost}/api/v1/namespace/{self.namespace}/packages",
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/packages",
                 auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
                 headers=headers,
                 body=body
@@ -103,10 +97,10 @@ class _Package:
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
         
-    def find_one(self, package, headers = {}, body = {}, web = True, blocking = False):
+    def find_one(self, package, headers = {}, body = {}, blocking = False):
         try:
             r = requests.get(
-                f"{self.apihost}/api/v1/namespace/{self.namespace}/packages/{package}",
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/packages/{package}",
                 auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
                 headers=headers,
                 body=body
@@ -114,10 +108,10 @@ class _Package:
             return r
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
-    def delete(self, package, headers = {}, body = {}, web = True, blocking = False):
+    def delete(self, package, headers = {}, body = {}, blocking = False):
         try:
             r = requests.delete(
-                f"{self.apihost}/api/v1/namespace/{self.namespace}/packages/{package}?force=true",
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/packages/{package}?force=true",
                 auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
                 headers=headers,
                 body=body
@@ -126,10 +120,10 @@ class _Package:
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
         
-    def add(self, package, headers = {"Content-Type": "application/json"}, body = {}, web = True, blocking = False):
+    def add(self, package, headers = {"Content-Type": "application/json"}, body = {}, blocking = False):
         try:
             r = requests.put(
-                f"{self.apihost}/api/v1/namespace/{self.namespace}/packages/{package}",
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/packages/{package}",
                 auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
                 headers=headers,
                 body=body
@@ -147,7 +141,7 @@ class _Activation:
     def find(self, limit = 30, skip = 0, since = 0, upto = 0):
         try:
             r = requests.get(
-                f"{self.apihost}/api/v1/namespace/{self.namespace}/activations",
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/activations",
                 auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
                 params={"limit": limit, "skip": skip, "since": since, "upto": upto}
                 )
@@ -158,7 +152,7 @@ class _Activation:
     def find_one(self, activation_id):
         try:
             r = requests.get(
-                f"{self.apihost}/api/v1/namespace/{self.namespace}/activations/{activation_id}",
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/activations/{activation_id}",
                 auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
                 )
             return r
@@ -167,7 +161,7 @@ class _Activation:
     def logs(self, activation_id):
         try:
             r = requests.get(
-                f"{self.apihost}/api/v1/namespace/{self.namespace}/activations/{activation_id}/logs",
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/activations/{activation_id}/logs",
                 auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
                 )
             return r
@@ -176,7 +170,7 @@ class _Activation:
     def result(self, activation_id):
         try:
             r = requests.get(
-                f"{self.apihost}/api/v1/namespace/{self.namespace}/activations/{activation_id}/result",
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/activations/{activation_id}/result",
                 auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
                 )
             return r
