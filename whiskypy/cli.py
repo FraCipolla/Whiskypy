@@ -7,6 +7,9 @@ class _Action:
         self.apihost = apihost
         self.apikey = apikey.split(':')
         self.namespace = namespace
+        print(self.apihost)
+        print(self.apikey)
+        print(self.namespace)
 
     def get(self, action: str, headers = {}, web = True, blocking = False):
         try:
@@ -28,6 +31,7 @@ class _Action:
     def post(self, action: str, headers = {"Content-Type": "application/json"}, body = {}, web = True, blocking = False):
         try:
             if not web:
+                print(f"{self.apihost}/api/v1/namespace/{self.namespace}/actions/{action}?blocking={blocking}")
                 r = requests.post(
                     f"{self.apihost}/api/v1/namespace/{self.namespace}/actions/{action}?blocking={blocking}",
                     auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
