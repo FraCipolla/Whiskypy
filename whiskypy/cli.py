@@ -237,10 +237,198 @@ class _Activation:
                 )
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
-        
+
+class _Rule:
+    def __init__(self, apihost, apikey, namespace):
+        self.apihost = apihost
+        self.apikey = apikey.split(':')
+        self.namespace = namespace
+
+    def list(self, limit = 30, skip = 0):
+        try:
+            return requests.get(
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/rules",
+                auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                params={"limit": limit, "skip": skip}
+                )
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+    def get(self, name=None):
+        try:
+            if not name:
+                raise ValueError("rule name missing")
+            return requests.get(
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/rules/{name}",
+                auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                )
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+    def create(self, name=None, body={}):
+        try:
+            if not name:
+                raise ValueError("rule name missing")
+            return requests.put(
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/rules/{name}",
+                auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                params={"overwrite": False},
+                json=body
+                )
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+    def update(self, name=None, body={}):
+        try:
+            if not name:
+                raise ValueError("rule name missing")
+            return requests.put(
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/rules/{name}",
+                auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                params={"overwrite": True},
+                json=body
+                )
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+    def delete(self, name=None):
+        try:
+            if not name:
+                raise ValueError("rule name missing")
+            return requests.delete(
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/rules/{name}",
+                auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                )
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+    def enable(self, name=None):
+        try:
+            if not name:
+                raise ValueError("rule name missing")
+            return requests.post(
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/rules/{name}",
+                auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                json={"status": "active"}
+                )
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+    def disable(self, name=None):
+        try:
+            if not name:
+                raise ValueError("rule name missing")
+            return requests.post(
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/rules/{name}",
+                auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                json={"status": "inactive"}
+                )
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+
+class _Trigger:
+    def __init__(self, apihost, apikey, namespace):
+        self.apihost = apihost
+        self.apikey = apikey.split(':')
+        self.namespace = namespace
+
+    def list(self, limit = 30, skip = 0):
+        try:
+            return requests.get(
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/triggers",
+                auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                params={"limit": limit, "skip": skip}
+                )
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+    def get(self, name=None):
+        try:
+            if not name:
+                raise ValueError("rule name missing")
+            return requests.get(
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/triggers/{name}",
+                auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                )
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+    def create(self, name=None, body={}):
+        try:
+            if not name:
+                raise ValueError("rule name missing")
+            return requests.put(
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/triggers/{name}",
+                auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                params={"overwrite": False},
+                json=body
+                )
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+    def update(self, name=None, body={}):
+        try:
+            if not name:
+                raise ValueError("rule name missing")
+            return requests.put(
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/triggers/{name}",
+                auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                params={"overwrite": True},
+                json=body
+                )
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+    def delete(self, name=None):
+        try:
+            if not name:
+                raise ValueError("rule name missing")
+            return requests.delete(
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/triggers/{name}",
+                auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                )
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+    def fire(self, name=None, payload={}):
+        try:
+            if not name:
+                raise ValueError("rule name missing")
+            return requests.post(
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/triggers/{name}",
+                auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                json=payload
+                )
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+
+class _Namespace:
+    def __init__(self, apihost, apikey, namespace):
+        self.apihost = apihost
+        self.apikey = apikey.split(':')
+        self.namespace = namespace
+
+    def list(self):
+        try:
+            return requests.get(
+                f"{self.apihost}/api/v1/namespaces",
+                auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                )
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+
+class _Limit:
+    def __init__(self, apihost, apikey, namespace):
+        self.apihost = apihost
+        self.apikey = apikey.split(':')
+        self.namespace = namespace
+
+    def list(self, namespace=None):
+        try:
+            if namespace:
+                return requests.get(
+                f"{self.apihost}/api/v1/namespaces/{namespace}/limits",
+                auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                )
+            return requests.get(
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/limits",
+                auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                )
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
+
 class Openwhisk:
 
-    __version__ = "0.2"
+    __version__ = "0.3"
 
     def __init__(self, apihost = None):
         if not apihost:
@@ -256,4 +444,7 @@ class Openwhisk:
         self.actions = _Action(apihost=apihost, apikey=self.apikey, namespace=self.namespace)
         self.packages = _Package(apihost=apihost, apikey=self.apikey, namespace=self.namespace)
         self.activations = _Activation(apihost=apihost, apikey=self.apikey, namespace=self.namespace)
-
+        self.rules = _Rule(apihost=apihost, apikey=self.apikey, namespace=self.namespace)
+        self.triggers = _Trigger(apihost=apihost, apikey=self.apikey, namespace=self.namespace)
+        self.namespaces = _Namespace(apihost=apihost, apikey=self.apikey, namespace=self.namespace)
+        self.limits = _Limit(apihost=apihost, apikey=self.apikey, namespace=self.namespace)
