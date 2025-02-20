@@ -25,14 +25,14 @@ def controller(mapping = {'get': {}, 'post': {}, 'delete': {}, 'put': {}, 'defau
     def decorator(function):
         def wrapper(args, **kwargs):
             body = str(inspect.getsourcelines(function))
-            print(globals())
             lines = body.split('\n')
             # print(lines)
             i = 0
             method = args['__ow_method']
             path = args['__ow_path']
+            function(args, **kwargs)
+            print(locals())
             try:
-                # function(args, **kwargs)
                 # while lines:
                 #     if lines[i].startswith('def main'):
                 #         break
