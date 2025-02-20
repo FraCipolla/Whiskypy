@@ -30,7 +30,7 @@ def controller(mapping = {'get': {}, 'post': {}, 'delete': {}, 'put': {}, 'defau
                 function(args, **kwargs)
                 fn = mapping[method][path]
                 if type(fn) is Response:
-                    return fn
+                    return {"statusCode": fn.status_code, "body": fn.json()}
                 return fn(args)
             except Exception as e:
                 print(e)
