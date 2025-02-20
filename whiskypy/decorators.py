@@ -39,30 +39,34 @@ def controller(mapping = {'get': {}, 'post': {}, 'delete': {}, 'put': {}, 'defau
         return wrapper
     return decorator
 
-def get(path=''):
-    def decorator(function):
-        def wrapper(args, **kwargs):
-            return function(args)
-        return wrapper
-    return decorator
+class ow_controller:
+    def __init__(self):
+        pass
 
-def post(path=''):
-    def decorator(function):
-        def wrapper(args, **kwargs):
-            return function(args)
-        return wrapper
-    return decorator
+    def get(self, path=''):
+        def decorator(function):
+            def wrapper(args, **kwargs):
+                return function(args)
+            return wrapper
+        return decorator
 
-def delete(path=''):
-    def decorator(function):
-        def wrapper(args, **kwargs):
-            return function(args)
-        return wrapper
-    return decorator
+    def post(self, path=''):
+        def decorator(function):
+            def wrapper(args, **kwargs):
+                return function(args)
+            return wrapper
+        return decorator
 
-def get(path=''):
-    def decorator(function):
-        def wrapper(args, **kwargs):
-            return function(args)
-        return wrapper
-    return decorator
+    def delete(self, path=''):
+        def decorator(function):
+            def wrapper(args, **kwargs):
+                return function(args)
+            return wrapper
+        return decorator
+
+    def get(self, path=''):
+        def decorator(function):
+            def wrapper(args, **kwargs):
+                return function(args)
+            return wrapper
+        return decorator
