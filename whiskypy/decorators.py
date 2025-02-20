@@ -24,6 +24,7 @@ def require(argument: str | list[str]):
 def controller(mapping = {'get': {}, 'post': {}, 'delete': {}, 'put': {}, 'default': {'statusCode': 404}}):
     def decorator(function):
         def wrapper(args, **kwargs):
+            print(inspect.getsourcelines(function))
             method = args['__ow_method']
             path = args['__ow_path']
             try:
