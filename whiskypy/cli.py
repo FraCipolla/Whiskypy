@@ -152,7 +152,7 @@ class _Package:
         try:
             if package:
                 return requests.get(
-                    f"{self.apihost}/api/v1/namespaces/{self.namespace}/packages",
+                    f"{self.apihost}/api/v1/namespaces/{self.namespace}/packages/{package}",
                     auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
                     params={"public": public, "limit": limit, "skip": skip}
                     )
