@@ -21,33 +21,13 @@ def require(argument: str | list[str]):
         return wrapper
     return decorator
 
-class ow_controller:
-    def __init__(self, func):
-        self._fn = func
-
-    def __call__(self, args, **kwargs):
-        print(locals())
-    
 def controller(mapping = {'get': {}, 'post': {}, 'delete': {}, 'put': {}, 'default': {'statusCode': 404}}):
     def decorator(function):
         def wrapper(args, **kwargs):
-            body = str(inspect.getsourcelines(function))
-            lines = body.split('\n')
-            # print(lines)
-            i = 0
             method = args['__ow_method']
             path = args['__ow_path']
-            function(args, **kwargs)
             try:
-                # while lines:
-                #     if lines[i].startswith('def main'):
-                #         break
-                #     i += 1
-                # while lines:
-                #     if lines[i].startswith('@' + method):
-                #         inner_path = lines[i].split('(')[1]
-                #         if inner_path[:-1] == path:
-                #             next_line = lines[i + 1]
+                function(args, **kwargs)
                 fn = mapping[method][path]
                 if type(fn) is Response:
                     return {"headers": fn.headers, "statusCode": fn.status_code, "body": fn.json()}
@@ -56,7 +36,6 @@ def controller(mapping = {'get': {}, 'post': {}, 'delete': {}, 'put': {}, 'defau
                 if 'default' in mapping:
                     return mapping['default']
             return {'statusCode': 404}
-        print(locals())
         return wrapper
     return decorator
 
@@ -81,7 +60,7 @@ def delete(path=''):
         return wrapper
     return decorator
 
-def put(path=''):
+def get(path=''):
     def decorator(function):
         def wrapper(args, **kwargs):
             return function(args)
