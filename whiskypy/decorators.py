@@ -25,9 +25,9 @@ def controller(mapping = {'get': {}, 'post': {}, 'delete': {}, 'put': {}, 'defau
     def decorator(function):
         def wrapper(args, **kwargs):
             body = str(inspect.getsourcelines(function))
-            print(locals())
+            print(globals())
             lines = body.split('\n')
-            print(lines)
+            # print(lines)
             i = 0
             method = args['__ow_method']
             path = args['__ow_path']
