@@ -449,5 +449,5 @@ class Openwhisk:
         self.namespaces = _Namespace(apihost=apihost, apikey=self.apikey, namespace=self.namespace)
         self.limits = _Limit(apihost=apihost, apikey=self.apikey, namespace=self.namespace)
 
-    def test():
+    def test(__self__):
         print("test method")
