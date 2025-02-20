@@ -21,6 +21,13 @@ def require(argument: str | list[str]):
         return wrapper
     return decorator
 
+class ow_controller:
+    def __init__(self, func):
+        self._fn = func
+
+    def __call__(self, args, **kwargs):
+        print(locals())
+    
 def controller(mapping = {'get': {}, 'post': {}, 'delete': {}, 'put': {}, 'default': {'statusCode': 404}}):
     def decorator(function):
         def wrapper(args, **kwargs):
@@ -31,7 +38,6 @@ def controller(mapping = {'get': {}, 'post': {}, 'delete': {}, 'put': {}, 'defau
             method = args['__ow_method']
             path = args['__ow_path']
             function(args, **kwargs)
-            print(locals())
             try:
                 # while lines:
                 #     if lines[i].startswith('def main'):
@@ -50,6 +56,7 @@ def controller(mapping = {'get': {}, 'post': {}, 'delete': {}, 'put': {}, 'defau
                 if 'default' in mapping:
                     return mapping['default']
             return {'statusCode': 404}
+        print(locals())
         return wrapper
     return decorator
 
