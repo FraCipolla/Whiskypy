@@ -29,7 +29,8 @@ def controller(mapping = {'get': {}, 'post': {}, 'delete': {}, 'put': {}, 'defau
                 fn = mapping[method][path]
                 function(args, **kwargs)
                 return fn(args)
-            except:
+            except Exception as e:
+                print(e)
                 if 'default' in mapping:
                     return mapping['default']
             return {'statusCode': 404}
