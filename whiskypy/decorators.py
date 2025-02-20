@@ -1,4 +1,5 @@
 from typing import overload
+import inspect
 
 @overload
 def require(argument: str): ...
@@ -27,6 +28,8 @@ def controller(mapping = {'get': {}, 'post': {}, 'delete': {}, 'put': {}, 'defau
             try:
                 fn = mapping[method][path]
                 function(args, **kwargs)
+                if len(list(inspect.signature(fn).parameters.keys())) > 0:
+                    return fn
                 return fn(args)
             except:
                 if 'default' in mapping:
