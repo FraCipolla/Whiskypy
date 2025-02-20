@@ -32,6 +32,7 @@ def controller(mapping = {'get': {}, 'post': {}, 'delete': {}, 'put': {}, 'defau
                 if type(fn) is Response:
                     print('type Response')
                     print(fn.text)
+                    print(fn.json())
                     return {"statusCode": fn.status_code, "body": fn.json()}
                 return fn(args)
             except Exception as e:
