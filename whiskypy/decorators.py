@@ -24,7 +24,7 @@ def require(argument: str | list[str]):
 def controller(mapping = {'get': {}, 'post': {}, 'delete': {}, 'put': {}, 'default': {'statusCode': 404}}):
     def decorator(function):
         def wrapper(args, **kwargs):
-            body = inspect.getsourcelines(function)
+            body = str(inspect.getsourcelines(function))
             print(locals)
             lines = body.split('\n')
             print(lines)
