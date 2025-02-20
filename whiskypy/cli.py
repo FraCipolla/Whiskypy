@@ -8,7 +8,7 @@ class _Invoke:
         self.apikey = apikey.split(':')
         self.namespace = namespace
 
-    def get(self, action=None, headers = {}, params={}, namespace=None):
+    def get(self, action=None, headers={}, params={}, namespace=None):
         try:
             if not action:
                 raise ValueError('action name missing')
@@ -18,6 +18,7 @@ class _Invoke:
                 params=params
                 )
         except requests.exceptions.RequestException as e:
+            print(e)
             raise SystemExit(e)
         
     def post(self, action=None, headers = {"Content-Type": "application/json"}, params={}, body = {}, namespace=None):
