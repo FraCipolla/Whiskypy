@@ -1,4 +1,5 @@
 from typing import overload
+from requests import Response
 import inspect
 
 @overload
@@ -26,8 +27,10 @@ def controller(mapping = {'get': {}, 'post': {}, 'delete': {}, 'put': {}, 'defau
             method = args['__ow_method']
             path = args['__ow_path']
             try:
-                fn = mapping[method][path]
                 function(args, **kwargs)
+                fn = mapping[method][path]
+                if type(fn) is Response:
+                    return fn
                 return fn(args)
             except Exception as e:
                 print(e)
