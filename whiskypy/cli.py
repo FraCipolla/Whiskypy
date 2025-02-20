@@ -448,3 +448,6 @@ class Openwhisk:
         self.triggers = _Trigger(apihost=apihost, apikey=self.apikey, namespace=self.namespace)
         self.namespaces = _Namespace(apihost=apihost, apikey=self.apikey, namespace=self.namespace)
         self.limits = _Limit(apihost=apihost, apikey=self.apikey, namespace=self.namespace)
+
+    def test():
+        print("test method")
