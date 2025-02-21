@@ -503,5 +503,18 @@ class Openwhisk:
         self.namespaces = _Namespace(apihost=apihost, apikey=self.apikey, namespace=self.namespace)
         self.limits = _Limit(apihost=apihost, apikey=self.apikey, namespace=self.namespace)
 
-    def test(__self__):
-        print("test method")
+    def invoke(self, action=None, blocking=False, result=False, timeout=60000, payload={}, http=False):
+        try:
+            if not action:
+                raise ValueError("action name missing")
+            r = requests.post(
+                f"{self.apihost}/api/v1/namespaces/{self.namespace}/actions/{action}",
+                auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
+                params={"blocking": True if blocking or http else False, 'result': result, 'timeout': timeout},
+                json=payload
+                )
+            if http:
+                return r.json()['response']['result']
+            return r.json()
+        except requests.exceptions.RequestException as e:
+            raise SystemExit(e)
