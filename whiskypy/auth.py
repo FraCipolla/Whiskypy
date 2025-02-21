@@ -35,7 +35,7 @@ def auth_decorator(function):
             jwt.decode(token_spl[1], key=secret, algorithms='HS256')
         except Exception as e:
             return {
-                "headers": {'Set-Cookie': f'{os.environ['__OW_NAMESPACE']}-sess-cookie=; HttpOnly; Secure; expires=Thu, 01 Jan 1970 00:00:01 GMT'},
+                "headers": {'Set-Cookie': f"{os.environ['__OW_NAMESPACE']}-sess-cookie=; HttpOnly; Secure; expires=Thu, 01 Jan 1970 00:00:01 GMT"},
                 "statusCode": 401,
                 "body": {"error": e}
                 }
