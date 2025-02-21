@@ -8,52 +8,64 @@ class _Invoke:
         self.apikey = apikey.split(':')
         self.namespace = namespace
 
-    def get(self, action=None, headers={}, params={}, namespace=None):
+    def get(self, action=None, headers={}, params={}, namespace=None, http=False):
         try:
             if not action:
                 raise ValueError('action name missing')
-            return requests.get(
+            r = requests.get(
                 f"{self.apihost}/api/v1/web/{self.namespace if not namespace else namespace}/{action}",
                 headers=headers,
                 params=params
                 )
+            if http:
+                return {'statusCode': r.status_code, 'body': r.josn()}
+            return r
         except requests.exceptions.RequestException as e:
             print(e)
             raise SystemExit(e)
         
-    def post(self, action=None, headers = {"Content-Type": "application/json"}, params={}, body = {}, namespace=None):
+    def post(self, action=None, headers = {"Content-Type": "application/json"}, params={}, body = {}, namespace=None, http=False):
         try:
             if not action:
                 raise ValueError('action name missing')
-            return requests.get(
+            r = requests.get(
                 f"{self.apihost}/api/v1/web/{self.namespace if not namespace else namespace}/{action}",
                 headers=headers,
                 json=body,
                 params=params
                 )
+            if http:
+                return {'statusCode': r.status_code, 'body': r.josn()}
+            return r
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
         
-    def delete(self, action=None, headers = {}, params={}, namespace=None):
+    def delete(self, action=None, headers = {}, params={}, namespace=None, http=False):
         try:
             if not action:
                 raise ValueError('action name missing')
-            return requests.delete(
+            r = requests.delete(
                 f"{self.apihost}/api/v1/web/{self.namespace if not namespace else namespace}/{action}",
                 headers=headers,
                 params=params
                 )
+            if http:
+                return {'statusCode': r.status_code, 'body': r.josn()}
+            return r
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
         
-    def put(self, action=None, headers = {"Content-Type": "application/json"}, params={}, body = {}, namespace=None):
+    def put(self, action=None, headers = {"Content-Type": "application/json"}, params={}, body = {}, namespace=None, http=False):
         try:
-            return requests.put(
+            r = requests.put(
                 f"{self.apihost}/api/v1/web/{self.namespace if not namespace else namespace}/{action}",
                 headers=headers,
                 json=body,
                 params=params
                 )
+            if http:
+                return {'statusCode': r.status_code, 'body': r.josn()}
+            return r
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
 
@@ -119,16 +131,19 @@ class _Action:
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
         
-    def invoke(self, action=None, blocking=False, result=False, timeout=60000, payload={}):
+    def invoke(self, action=None, blocking=False, result=False, timeout=60000, payload={}, http=False):
         try:
             if not action:
                 raise ValueError("action name missing")
-            return requests.post(
+            r = requests.post(
                 f"{self.apihost}/api/v1/namespaces/{self.namespace}/actions/{action}",
                 auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
-                params={"blocking": blocking, 'result': result, 'timeout': timeout},
+                params={"blocking": True if blocking or http else False, 'result': result, 'timeout': timeout},
                 json=payload
                 )
+            if http:
+                return r.json()['response']['result']
+            return r.json()
         except requests.exceptions.RequestException as e:
             raise SystemExit(e)
 
