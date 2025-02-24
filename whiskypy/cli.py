@@ -159,7 +159,7 @@ class _Package:
             r = requests.get(
                 f"{self.apihost}/api/v1/namespaces/{self.namespace}/packages",
                 auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
-                params={"public": public, "limit": limit, "skip": skip}
+                params={"limit": limit, "skip": skip}
                 )
             if http:
                 return {'statusCode': r.status_code, 'body': r.json()}
