@@ -234,19 +234,19 @@ class _Activation:
         self.apikey = apikey.split(':')
         self.namespace = namespace
 
-    def list(self, name = None, limit = 30, skip = 0, since = 0, upto = time.time() * 1000, docs=False, http=False):
+    def list(self, name = None, limit = 30, skip = 0, since = 0, upto = 0, docs=False, http=False):
         try:
             if name:
                 r = requests.get(
                     f"{self.apihost}/api/v1/namespaces/{self.namespace}/activations",
                     auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
-                    params={'name': name, "limit": limit, "skip": skip, "since": since, "upto": upto, 'docs': docs}
+                    params={'name': name, "limit": limit, "skip": skip, 'docs': docs}
                     )    
             else:
                 r = requests.get(
                     f"{self.apihost}/api/v1/namespaces/{self.namespace}/activations",
                     auth=HTTPBasicAuth(self.apikey[0], self.apikey[1]),
-                    params={"limit": limit, "skip": skip, "since": since, "upto": upto, 'docs': docs}
+                    params={"limit": limit, "skip": skip, 'docs': docs}
                     )
             if http:
                 return {'statusCode': r.status_code, 'body': r.json()}
