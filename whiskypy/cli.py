@@ -1,5 +1,6 @@
 import os
 import requests
+from datetime import datetime
 from requests.auth import HTTPBasicAuth
 
 class _Invoke:
@@ -233,7 +234,7 @@ class _Activation:
         self.apikey = apikey.split(':')
         self.namespace = namespace
 
-    def list(self, name = None, limit = 30, skip = 0, since = 0, upto = 0, docs=False, http=False):
+    def list(self, name = None, limit = 30, skip = 0, since = 0, upto = datetime.now(), docs=False, http=False):
         try:
             if name:
                 r = requests.get(
