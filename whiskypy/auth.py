@@ -37,7 +37,7 @@ def auth_decorator(function):
             return {
                 "headers": {'Set-Cookie': f"{os.environ['__OW_NAMESPACE']}-sess-cookie=; HttpOnly; Secure; expires=Thu, 01 Jan 1970 00:00:01 GMT"},
                 "statusCode": 401,
-                "body": {"error": e}
+                "body": {"error": "token expired"}
                 }
         return function(args, **kwargs)
     return wrapper

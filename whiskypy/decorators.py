@@ -33,6 +33,7 @@ def controller(mapping = {'get': {}, 'post': {}, 'delete': {}, 'put': {}, 'defau
                     return {"headers": fn.headers, "statusCode": fn.status_code, "body": fn.json()}
                 return fn(args)
             except Exception as e:
+                print(e)
                 if 'default' in mapping:
                     return mapping['default']
             return {'statusCode': 404}
